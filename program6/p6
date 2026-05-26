@@ -1,0 +1,46 @@
+#include <stdio.h>
+int max(int a, int b) {
+    return (a > b) ? a : b;
+}
+int KnapsackDP(int n, int M, int W[], int P[]) {
+    int Table[n + 1][M + 1];
+    for (int i = 0; i <= n; i++) {
+        Table[i][0] = 0;
+    }
+    for (int j = 0; j <= M; j++) {
+        Table[0][j] = 0;
+    }
+    for (int i = 1; i <= n; i++) {
+        for (int j = 1; j <= M; j++) {
+            if (j < W[i - 1]) {
+                Table[i][j] = Table[i - 1][j];
+            } else {
+                Table[i][j] = max(
+                    Table[i - 1][j],
+                    P[i - 1] + Table[i - 1][j - W[i - 1]]
+                );
+            }
+        }
+    }
+    return Table[n][M];
+}
+
+int main() {
+    int n, M;
+    printf("Enter number of items: ");
+    scanf("%d", &n);
+    printf("Enter capacity of knapsack: ");
+    scanf("%d", &M);
+    int W[n], P[n];
+    printf("Enter weights of items:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &W[i]);
+    }
+    printf("Enter profits of items:\n");
+    for (int i = 0; i < n; i++) {
+        scanf("%d", &P[i]);
+    }
+    int result = KnapsackDP(n, M, W, P);
+    printf("Maximum Profit = %d\n", result);
+    return 0;
+}
