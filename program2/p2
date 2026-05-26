@@ -1,0 +1,73 @@
+#include <stdio.h>
+#define LEFT -1
+#define RIGHT 1
+int getMobile(int a[], int dir[], int n)
+{
+    int mobile = 0, mobileIndex = -1;
+    for(int i = 0; i < n; i++)
+    {
+        if(dir[a[i]-1] == LEFT && i != 0)
+        {
+            if(a[i] > a[i-1] && a[i] > mobile)
+            {
+                mobile = a[i];
+                mobileIndex = i;
+            }
+        }
+        if(dir[a[i]-1] == RIGHT && i != n-1)
+        {
+            if(a[i] > a[i+1] && a[i] > mobile)
+            {
+                mobile = a[i];
+                mobileIndex = i;
+            }
+        }
+    }
+
+    return mobileIndex;
+}
+void printPermutation(int a[], int n)
+{
+    for(int i = 0; i < n; i++)
+        printf("%d ", a[i]);
+    printf("\n");
+}
+int main()
+{
+    int n;
+    printf("Enter number of elements: ");
+    scanf("%d",&n);
+    int a[n], dir[n];
+    for(int i = 0; i < n; i++)
+    {
+        a[i] = i + 1;
+        dir[i] = LEFT;
+    }
+    printPermutation(a,n);
+    while(1)
+    {
+        int mobileIndex = getMobile(a,dir,n);
+        if(mobileIndex == -1)
+            break;
+        int mobile = a[mobileIndex];
+        if(dir[mobile-1] == LEFT)
+        {
+            int temp = a[mobileIndex];
+            a[mobileIndex] = a[mobileIndex-1];
+            a[mobileIndex-1] = temp;
+            mobileIndex--;
+        }
+        else
+        {
+            int temp = a[mobileIndex];
+            a[mobileIndex] = a[mobileIndex+1];
+            a[mobileIndex+1] = temp;
+            mobileIndex++;
+        }
+        for(int i = 0; i < n; i++)
+        {
+            if(a[i] > mobile)
+                dir[a[i]-1] = -dir[a[i]-1];
+        }
+        printPermutation(a,n);
+    }
